@@ -1,0 +1,6 @@
+@CRUD_API_IAN_HostAddress = http://localhost:5074
+
+GET {{CRUD_API_IAN_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

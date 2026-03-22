@@ -16,4 +16,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\CRUD_API_IAN\CRUD-API-IAN.DOMAIN\CRUD-API-IAN.DOMAIN.csproj" />
+    <ProjectReference Include="..\..\CRUD_API_IAN\CRUD-API-IAN.Persistence\CRUD-API-IAN.Persistence.csproj" />
+    <ProjectReference Include="..\..\CRUD_API_IAN\CRUD-API-IAN.Repositories\CRUD-API-IAN.Infraestructure.csproj" />
+  </ItemGroup>
+
 </Project>

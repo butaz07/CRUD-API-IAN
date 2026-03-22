@@ -1,29 +1,30 @@
-﻿using CRUD_API_IAN.Data;
-using CRUD_API_IAN.DTOs;
-using CRUD_API_IAN.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using CRUD_API_IAN.DOMAIN.ENTITIES;
 
+using CRUD_API_IAN.DTOs;
+using CRUD_API_IAN.Repositories.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CRUD_API_IAN.Controllers
 {
-    [Route("api/[controller]")] 
+    [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase    
+    public class StudentsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+     
+        private readonly IUnitOfWork _unitOfWork;
 
-        public StudentsController(ApplicationDbContext context)
+        public StudentsController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        // GET: api/students
         [HttpGet]
-        public async Task<ActionResult<List<StudentReadDto>>> GetStudents()
+        public ActionResult<List<StudentReadDto>> GetStudents()
         {
-            // Seleccionamos solo Estudiantes y mapeamos manualmente a DTO
-            var students = await _context.Students
+            
+            var students = _unitOfWork.Students.GetAllStudents()
                 .Select(s => new StudentReadDto
                 {
                     Id = s.Id,
@@ -31,16 +32,14 @@ namespace CRUD_API_IAN.Controllers
                     StudentID = s.StudentID,
                     Carrier = s.Carrier
                 })
-                .ToListAsync();
+                .ToList();
 
             return Ok(students);
         }
 
-        // POST: api/students
         [HttpPost]
-        public async Task<ActionResult> CreateStudent(StudentCreateDto studentDto)
+        public ActionResult CreateStudent(StudentCreateDto studentDto)
         {
-            // 1. Convertir DTO a Entidad
             var newStudent = new Student
             {
                 Name = studentDto.Name,
@@ -49,15 +48,53 @@ namespace CRUD_API_IAN.Controllers
                 Phone = studentDto.Phone,
                 StudentID = studentDto.StudentID,
                 Carrier = studentDto.Carrier,
-                Average = 0 // Valor por defecto
+                Average = 0
             };
 
-            // 2. Guardar en Base de Datos
-            _context.Students.Add(newStudent);
-            await _context.SaveChangesAsync();
+            
+            _unitOfWork.Students.AddStudent(newStudent);
 
-            // 3. Retornar éxito
+           
+            _unitOfWork.Save();
+
             return CreatedAtAction(nameof(GetStudents), new { id = newStudent.Id }, studentDto);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateStudent(int id, StudentCreateDto studentDto)
+        {
+            var student = _unitOfWork.Students.GetStudentById(id);
+            if (student == null)
+            {
+                return NotFound("Manín, ese estudiante no existe.");
+            }
+
+            student.Name = studentDto.Name;
+            student.Age = studentDto.Age;
+            student.Email = studentDto.Email;
+            student.Phone = studentDto.Phone;
+            student.StudentID = studentDto.StudentID;
+            student.Carrier = studentDto.Carrier;
+
+            _unitOfWork.Students.UpdateStudent(student);
+            _unitOfWork.Save(); 
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteStudent(int id)
+        {
+            var student = _unitOfWork.Students.GetStudentById(id);
+            if (student == null)
+            {
+                return NotFound("Manín, ese estudiante no se encontró.");
+            }
+
+            _unitOfWork.Students.DeleteStudent(id);
+            _unitOfWork.Save(); 
+
+            return NoContent();
         }
     }
 }

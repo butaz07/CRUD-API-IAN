@@ -1,4 +1,6 @@
-using CRUD_API_IAN.Data;
+
+using CRUD_API_IAN.Persistence;
+using CRUD_API_IAN.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -6,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

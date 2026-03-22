@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CRUD_API_IAN.DTOs
+namespace CRUD_API_IAN.DTO
 {
     public class StudentCreateDto
     {

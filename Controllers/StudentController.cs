@@ -1,6 +1,5 @@
 ﻿using CRUD_API_IAN.DOMAIN.ENTITIES;
-
-using CRUD_API_IAN.DTOs;
+using CRUD_API_IAN.DTO;
 using CRUD_API_IAN.Repositories.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

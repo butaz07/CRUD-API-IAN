@@ -2,9 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>CRUD_API_IAN.DOMAIN</RootNamespace>
+    <RootNamespace>CRUD_API_IAN.Repositories</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CRUD-API-IAN.Persistence\CRUD-API-IAN.Persistence.csproj" />
+  </ItemGroup>
 
 </Project>
